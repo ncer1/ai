@@ -1,0 +1,90 @@
+1. Write a Prolog in Prolog calculate addition of two no.  
+
+add(X, Y, Z) :- Z is X + Y.
+:- initialization(main).
+main :-
+    read(X),
+    read(Y),
+    Z is X + Y,
+    write(Z), nl, halt.
+
+
+2. Write a Prolog in Prolog to find Maximum of two no .  
+
+max(X, Y, M) :-
+    ( X >= Y -> M = X ; M = Y ).
+:- initialization(main).
+main :-
+    write('Enter first number: '), read(X),
+    write('Enter second number: '), read(Y),
+    max(X, Y, M),
+    write('Maximum = '), write(M), nl,
+    halt. 
+
+
+3. Write a Prolog in Prolog that take number N from the user and count from N to 10.  
+  
+count(N) :-
+    N =< 10,
+    write(N), nl,
+    N1 is N + 1,
+    count(N1).
+count(N) :- N > 10.
+:- initialization(main).
+main :-
+    write('Enter a number N: '),
+    read(N),
+    count(N),
+    halt.
+  
+
+4. Write a Prolog in Prolog that take number N from the user and count from N to 1.  
+  
+count(N) :-
+    N =< 10,
+    write(N), nl,
+    N1 is N + 1,
+    count(N1).
+count(N) :- N > 10.
+:- initialization(main).
+main :-
+    write('Enter a number N: '),
+    read(N),
+    count(N),
+    halt.
+
+
+5. Write a Prolog in Prolog that take number N from the user calculate factorial of no.  
+  
+% factorial(N, F) : F = N!
+factorial(0, 1).                       % base case
+factorial(N, F) :-
+    N > 0,
+    N1 is N - 1,
+    factorial(N1, F1),
+    F is N * F1.
+:- initialization(main).
+main :-
+    write('Enter a number N: '),
+    read(N),
+    factorial(N, F),
+    write('Factorial = '), write(F), nl,
+    halt.
+
+6. Write a Prolog in Prolog that take number N from the user calculate square of no from N to 20 and display it.  
+
+% square_from(N) prints N^2, (N+1)^2 ... up to 20^2
+square_from(N) :-
+    N =< 20,
+    S is N * N,
+    write(N), write('^2 = '), write(S), nl,
+    N1 is N + 1,
+    square_from(N1).
+square_from(N) :- N > 20.
+:- initialization(main).
+main :-
+    write('Enter a number N: '),
+    read(N),
+    square_from(N),
+    halt.
+ 
