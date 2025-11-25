@@ -1,0 +1,54 @@
+1. Write a Python in Prolog calculate addition of two no. 
+# Addition of two numbers
+x = int(input("Enter first number: "))
+y = int(input("Enter second number: "))
+
+z = x + y
+print("Addition =", z)
+
+2. Write a Python in Prolog to find Maximum of two no . 
+
+# Maximum of two numbers
+x = int(input("Enter first number: "))
+y = int(input("Enter second number: "))
+
+if x >= y:
+    print("Maximum =", x)
+else:
+    print("Maximum =", y)
+
+3. Write a Python in Prolog that take number N from the user and count from N to 10. 
+
+# Count from N to 10
+n = int(input("Enter N: "))
+
+for i in range(n, 11):
+    print(i)
+
+4. Write a Python in Prolog that take number N from the user and count from N to 1. 
+
+# Count from N to 1
+n = int(input("Enter N: "))
+
+for i in range(n, 0, -1):
+    print(i)
+
+5. Write a Python in Prolog that take number N from the user calculate factorial of no. 
+
+# Factorial of N
+n = int(input("Enter N: "))
+
+fact = 1
+for i in range(1, n + 1):
+    fact *= i
+
+print("Factorial =", fact)
+
+6. Write a Python in Prolog that take number N from the user calculate square of no from N to 20 and display it.
+
+# Square from N to 20
+n = int(input("Enter N: "))
+
+for i in range(n, 21):
+    print(f"{i}^2 =", i * i)
+
