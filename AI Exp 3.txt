@@ -1,0 +1,50 @@
+ Write a Program in Python to solve any problem using Depth First Search.  
+
+# Define the graph as an adjacency list
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': ['G'],
+    'E': ['F'],
+    'F': ['G'],
+    'G': []
+}
+
+# DFS function to find ALL paths from start to goal
+def dfs(graph, start, goal, path=None, visited=None):
+    if visited is None:
+        visited = set()
+    if path is None:
+        path = []
+
+    path.append(start)
+    visited.add(start)
+
+    if start == goal:
+        return [path.copy()]  # Found a path, return it
+
+    all_paths = []
+
+    for neighbor in graph[start]:
+        if neighbor not in visited:
+            found_paths = dfs(graph, neighbor, goal, path, visited)
+            all_paths.extend(found_paths)
+
+    # Backtrack
+    path.pop()
+    visited.remove(start)
+
+    return all_paths
+
+
+# --- Main Program ---
+if __name__ == "__main__":
+    start_node = 'A'
+    goal_node = 'G'
+
+    paths = dfs(graph, start_node, goal_node)
+
+    print(f"DFS Paths from {start_node} to {goal_node}:")
+    for p in paths:
+        print(p)

@@ -1,0 +1,46 @@
+Write a Program in Python to solve any problem using Breadth First Search.  
+
+from collections import deque
+
+# Graph as adjacency list
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': ['G'],
+    'E': ['F'],
+    'F': ['G'],
+    'G': []
+}
+
+# BFS to find shortest path from start to goal
+def breadth_first_search(graph, start, goal):
+    queue = deque()
+    queue.append([start])  # queue stores entire paths
+
+    while queue:
+        path = queue.popleft()  # FIFO
+        node = path[-1]
+
+        if node == goal:
+            return path  # shortest path found
+
+        for neighbor in graph[node]:
+            if neighbor not in path:  # avoid cycles
+                new_path = path + [neighbor]
+                queue.append(new_path)
+
+    return None  # no path found
+
+
+# --- Main Program ---
+if __name__ == "__main__":
+    start_node = 'A'
+    goal_node = 'G'
+
+    path = breadth_first_search(graph, start_node, goal_node)
+
+    if path:
+        print(f"Breadth-First Search Path from {start_node} to {goal_node}: {path}")
+    else:
+        print("No path found.")

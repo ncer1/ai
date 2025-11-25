@@ -1,0 +1,57 @@
+Write a Program in Python to solve any problem using Best First Search.  
+
+from queue import PriorityQueue
+
+# Define the graph as an adjacency list
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': ['G'],
+    'E': ['F'],
+    'F': ['G'],
+    'G': []
+}
+
+# Define heuristic values (estimated cost to goal G)
+heuristic = {
+    'A': 4,
+    'B': 2,
+    'C': 4,
+    'D': 2,
+    'E': 2,
+    'F': 1,
+    'G': 0
+}
+
+# Best-First Search (Greedy Search)
+def best_first_search(graph, start, goal, heuristic):
+    pq = PriorityQueue()  
+    pq.put((heuristic[start], [start]))  # store (heuristic value, path)
+
+    while not pq.empty():
+        _, path = pq.get()
+        node = path[-1]
+
+        if node == goal:
+            return path  # goal reached
+
+        for neighbor in graph[node]:
+            if neighbor not in path:  # avoid cycles
+                new_path = path + [neighbor]
+                pq.put((heuristic[neighbor], new_path))
+
+    return None  # no path found
+
+
+# --- Main Program ---
+if __name__ == "__main__":
+    start_node = 'A'
+    goal_node = 'G'
+
+    path = best_first_search(graph, start_node, goal_node, heuristic)
+
+    if path:
+        print(f"Best-First Search Path from {start_node} to {goal_node}: {path}")
+    else:
+        print("No path found.")
