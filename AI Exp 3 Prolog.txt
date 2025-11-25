@@ -1,0 +1,35 @@
+3. Write a Program in Prolog to solve any problem using Depth First Search. 
+
+% dfs.pl - find all paths from Start to Goal using DFS
+% Run: swipl dfs.pl
+% When prompted use atoms with a dot: e.g. a. g.
+
+:- initialization(main).
+
+% Graph definition (change edges if you want)
+edge(a,b). edge(a,c).
+edge(b,d). edge(b,e).
+edge(c,f).
+edge(d,g).
+edge(e,f).
+edge(f,g).
+
+% dfs(Current, Goal, VisitedSoFar, Path)
+dfs(Goal, Goal, Visited, Path) :-
+    reverse(Visited, Path).
+dfs(Current, Goal, Visited, Path) :-
+    edge(Current, Next),
+    \+ member(Next, Visited),
+    dfs(Next, Goal, [Next|Visited], Path).
+
+all_paths(Start, Goal, Paths) :-
+    findall(Path, dfs(Start, Goal, [Start], Path), Paths).
+
+main :-
+    write('Enter start node (atom): '), read(S),
+    write('Enter goal node (atom): '),  read(G),
+    ( all_paths(S, G, Paths) ->
+        ( Paths = [] -> writeln('No path found.')
+        ; writeln('Paths found:'), forall(member(P, Paths), (writeln(P))) )
+    ; writeln('No path computation.') ),
+    halt.

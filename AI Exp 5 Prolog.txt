@@ -1,0 +1,37 @@
+5. Write a Program in Prolog to solve any problem using Breadth First Search. 
+
+% bfs.pl - breadth-first search (shortest path)
+% Run: swipl bfs.pl
+% Use atoms when prompted, e.g. a. g.
+
+:- initialization(main).
+
+% Graph definition (change edges if you want)
+edge(a,b). edge(a,c).
+edge(b,d). edge(b,e).
+edge(c,f).
+edge(d,g).
+edge(e,f).
+edge(f,g).
+
+% bfs(Start,Goal,Path)
+bfs(Start, Goal, Path) :-
+    bfs_queue([[Start]], Goal, PathRev),
+    reverse(PathRev, Path).
+
+bfs_queue([[Goal|T]|_], Goal, [Goal|T]).
+bfs_queue([CurrentPath|OtherPaths], Goal, Result) :-
+    CurrentPath = [Node|_],
+    findall([Next|CurrentPath],
+            ( edge(Node, Next), \+ member(Next, CurrentPath) ),
+            NewPaths),
+    append(OtherPaths, NewPaths, Queue),
+    bfs_queue(Queue, Goal, Result).
+
+main :-
+    write('Enter start node (atom): '), read(S),
+    write('Enter goal node (atom): '),  read(G),
+    ( bfs(S, G, Path) ->
+        format("BFS shortest path: ~w~n", [Path])
+    ; writeln('No path found.') ),
+    halt.

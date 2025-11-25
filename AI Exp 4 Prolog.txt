@@ -1,0 +1,61 @@
+4. Write a Program in Prolog to solve any problem using Best First Search.
+
+% best_first.pl - Greedy Best-First Search using heuristic h(Node,Value)
+% Run: swipl best_first.pl
+% Use atoms when prompted, e.g. a. g.
+
+:- initialization(main).
+
+% Graph (directed)
+edge(a,b). edge(a,c).
+edge(b,d). edge(b,e).
+edge(c,f).
+edge(d,g).
+edge(e,f).
+edge(f,g).
+
+% Heuristic estimates to goal 'g'
+h(a,4). h(b,2). h(c,4). h(d,2). h(e,2). h(f,1). h(g,0).
+
+% best_first(Start,Goal,Path)
+best_first(Start, Goal, Path) :-
+    h(Start, H0),
+    best_first_frontier([[Start]-H0], Goal, RevPath),
+    reverse(RevPath, Path).
+
+% frontier is list of Path-H where Path is list (head is current node), H heuristic of last node
+best_first_frontier([[Path]-_H|_], Goal, Path) :-
+    Path = [Goal|_].
+best_first_frontier(Frontier, Goal, ResultPath) :-
+    % select best (lowest heuristic) path
+    select_min_h(Frontier, Best, Rest),
+    Best = [CurPath]-_H,
+    CurPath = [Node|_],
+    % expand successors
+    findall([ [Next|CurPath] - Hn ],
+            ( edge(Node, Next), \+ member(Next, CurPath), h(Next, Hn) ),
+            NewPaths),
+    append(Rest, NewPaths, NewFrontierUns),
+    sort_frontier(NewFrontierUns, NewFrontier),     % keep sorted by H
+    best_first_frontier(NewFrontier, Goal, ResultPath).
+
+select_min_h([P-H|Rest], P-H, Rest) :- % if first is min (after sorting)
+    forall(member(_-H2, Rest), H =< H2), !.
+select_min_h([A|As], Min, Rest) :-
+    select_min_h(As, Min, Rest1),
+    (A = Min -> Rest = Rest1 ; Rest = [A|Rest1]).
+
+sort_frontier(Frontier, Sorted) :-
+    map_list_to_pairs([_-H, P-H]>>(H), Frontier, Pairs), % not used; simpler sort
+    predsort(compare_h, Frontier, Sorted).
+
+compare_h(Delta, _P1-H1, _P2-H2) :-
+    ( H1 < H2 -> Delta = '<' ; H1 > H2 -> Delta = '>' ; Delta = '=' ).
+
+main :-
+    write('Enter start node (atom): '), read(S),
+    write('Enter goal node (atom): '),  read(G),
+    ( best_first(S, G, Path) ->
+        format("Best-First path: ~w~n", [Path])
+    ; writeln('No path found.') ),
+    halt.

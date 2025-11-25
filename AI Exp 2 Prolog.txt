@@ -1,0 +1,50 @@
+2. Write a Program in Prolog to solve N X N Queen Problem.
+
+% nqueens.pl - find all solutions for N x N queens
+% Run: swipl nqueens.pl
+% Input: Enter N.  (e.g. 8.)
+
+:- initialization(main).
+
+% safe(Column, Row, OtherCols, OtherRows)
+safe(_, _, [], []).
+safe(C, R, [C2|Cs], [R2|Rs]) :-
+    C =\= C2,
+    abs(C - C2) =\= abs(R - R2),
+    safe(C, R, Cs, Rs).
+
+place_queens(0, _, [], []).
+place_queens(RowsLeft, N, [C|Cols], [R|Rows]) :-
+    RowsLeft > 0,
+    R is N - RowsLeft + 1,               % row index from 1..N
+    between(1, N, C),
+    place_queens(RowsLeft - 1, N, Cols, Rows),
+    safe(C, R, Cols, Rows).
+
+solve_n_queens(N, Solutions) :-
+    place_queens(N, N, Cols, Rows),     % Cols holds columns per row (1..N)
+    Solutions = Cols.
+
+print_board(Cols) :-
+    length(Cols, N),
+    forall(
+        nth1(R, Cols, C),
+        (
+            numlist(1, N, Ns),
+            maplist({C}/[X,Ch]>>( (X=:=C -> Ch='Q' ; Ch='.') ), Ns, RowChars),
+            atomic_list_concat(RowChars, ' ', Row),
+            writeln(Row)
+        )
+    ).
+
+main :-
+    write('Enter N: '), read(N),
+    (integer(N), N > 0 -> true ; writeln('Invalid N'), halt(1)),
+    findall(Cols, solve_n_queens(N, Cols), Solutions),
+    length(Solutions, Count),
+    format("Total solutions for ~w x ~w: ~w~n~n", [N,N,Count]),
+    forall(
+        nth1(I, Solutions, Sol),
+        ( format("Solution ~w:~n", [I]), print_board(Sol), nl )
+    ),
+    halt.
